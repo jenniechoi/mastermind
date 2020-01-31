@@ -2,7 +2,7 @@
 * Open terminal and navigate to project folder ‘Mastermind’
 * Run ‘$python manage.py runserver’
 * Open browser to ‘http://localhost:8000/’ to start app
-## Document thought process and/or code structure
+# Document thought process and/or code structure
 There are three major components to the game: start, game play, and results.
 ## Start
 * A multiple choice form is called for the user to select the difficulty. Once they select, ‘start_game’ function in the API file will call the random integer generator web API. Based on their selection, the API call will have a parameter for 3, 4, or 5 numbers. The answer has all white spaces removed. A game will be created in the ‘Game’ database to save the difficulty and generated answer. The ‘start_game’ function will end with returning the newly created Game database ID. Then the user is redirected to the game play.
