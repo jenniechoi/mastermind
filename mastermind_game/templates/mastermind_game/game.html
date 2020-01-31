@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Mastermind Game</title>
+  </head>
+  
+  <body>
+    {% block "body" %}
+    <br></br>
+    <h3>Guess the combination! (digits will be 0-7)</h3>   
+    <form method='post'>
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" name="submit">Submit your guess</button>
+    </form>
+    <br></br>
+    Guesses Left: {{guesses_remaining}}
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+
+    <h2>Past Guesses</h2>
+    <div class="scrollable"><table><tbody><tr>
+    <td><strong>Guess #</strong></td>
+    <td><strong>&emsp;&emsp;Guess</strong></td>
+    <td><strong>&emsp;&emsp;Numbers Correct</strong></td>
+    <td><strong>&emsp;&emsp;Correct Positions</strong></td>
+
+    </tr>
+    {% for guess in past_guesses %}
+        <tr>
+        <td>{{ guess.guess_num }}</td>
+        <td>&emsp;&emsp;{{ guess.guess }}</td>
+        <td>&emsp;&emsp;{{ guess.nums_right }}</td>
+        <td>&emsp;&emsp;{{ guess.places_right }}</td>
+        </tr>
+    {% endfor %}
+    </tbody></table></div>
+  
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Mastermind Home</title>
+  </head>
+  <body>
+    {% block "body" %}
+    {% if game_results.result is True %}
+      <h1>&emsp; You Won! Keep Being Awesome :)</h1>
+    {% else %}
+      <h1>&emsp;You Lost! You should probably try again...</h1>
+    {% endif %}
+    <hr></hr>
+    
+    <h2>&emsp;&emsp;&emsp;&emsp;All Game Results</h2>
+    <div class="scrollable"><table><tbody><tr>
+
+      <td>&emsp;&emsp;&emsp;{{easy_wins}}/{{all_easy}}</td>
+      <td>&emsp;&emsp;&emsp;{{medium_wins}}/{{all_medium}}</td>
+      <td>&emsp;&emsp;&emsp;{{hard_wins}}/{{all_hard}}</td>
+      <td>&emsp;&emsp;&emsp;{{all_wins}}/{{all_games}}</td>
+      </tr>
+          <tr>
+          <td>&emsp;&emsp;&emsp;Easy</td>
+          <td>&emsp;&emsp;&emsp;Medium</td>
+          <td>&emsp;&emsp;&emsp;Hard</td>
+          <td>&emsp;&emsp;&emsp;All Games</td>  
+          </tr>
+      </tbody></table></div><br> 
+
+    <h2>&emsp;&emsp;&emsp;&emsp;Current Game Results</h2>
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Answer: {{game_results.answer}}&emsp;
+    Difficulty: 
+    {% if game_results.difficulty == 3 %}
+      Easy
+    {% elif game_results.difficulty == 4 %}
+      Medium
+    {% elif game_results.difficulty == 5 %}
+      Hard
+    {% endif %}
+
+    <br></br>
+    <div class="scrollable"><table><tbody><tr>
+    <td><strong>Guess #</strong></td>
+    <td><strong>&emsp;&emsp;Guess</strong></td>
+    <td><strong>&emsp;&emsp;Numbers Correct</strong></td>
+    <td><strong>&emsp;&emsp;Correct Positions</strong></td>
+    </tr>
+    {% for guess in guess_results %}
+        <tr>
+        <td>{{ guess.guess_num }}</td>
+        <td>&emsp;&emsp;{{ guess.guess }}</td>
+        <td>&emsp;&emsp;{{ guess.nums_right }}</td>
+        <td>&emsp;&emsp;{{ guess.places_right }}</td>
+        </tr>
+    {% endfor %}
+    </tbody></table></div>
+    <br></br>
+    <form method='post'>
+      {% csrf_token %}
+      <button type="submit" name="submit">Play Again</button>
+    </form>
+
+    {% endblock %}
+  </body>
+</html>
