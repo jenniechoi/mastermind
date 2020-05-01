@@ -20,3 +20,4 @@ class HardGuess(forms.Form):
 
 class Difficulty(forms.Form):
     difficulty = forms.MultipleChoiceField(choices=((3,'easy'), (4, 'medium'),(5,'hard')))
+    username = forms.CharField(required=True)

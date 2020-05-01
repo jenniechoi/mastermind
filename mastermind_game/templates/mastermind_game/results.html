@@ -11,12 +11,28 @@
   </head>
   <body>
     {% block "body" %}
-    {% if game_results.result is True %}
+    {% if game_results.win is True %}
       <h1>&emsp; You Won! Keep Being Awesome :)</h1>
     {% else %}
       <h1>&emsp;You Lost! You should probably try again...</h1>
     {% endif %}
     <hr></hr>
+
+    <h2>&emsp;&emsp;&emsp;&emsp;User Results</h2>
+    <div class="scrollable"><table><tbody><tr>
+
+      <td>&emsp;&emsp;&emsp;Username</td>
+      <td>&emsp;&emsp;&emsp;Total Wins</td>
+      <td>&emsp;&emsp;&emsp;Total Games</td>
+      <td>&emsp;&emsp;&emsp;Average Guesses</td>
+      </tr>
+          <tr>
+          <td>&emsp;&emsp;&emsp;{{user_update.username}} </td>
+          <td>&emsp;&emsp;&emsp;{{user_update.total_wins}}</td>
+          <td>&emsp;&emsp;&emsp;{{user_update.total_games}}</td>
+          <td>&emsp;&emsp;&emsp;{{user_update.average_guesses}}</td>  
+          </tr>
+      </tbody></table></div><br> 
     
     <h2>&emsp;&emsp;&emsp;&emsp;All Game Results</h2>
     <div class="scrollable"><table><tbody><tr>
@@ -56,12 +72,13 @@
         <tr>
         <td>{{ guess.guess_num }}</td>
         <td>&emsp;&emsp;{{ guess.guess }}</td>
-        <td>&emsp;&emsp;{{ guess.nums_right }}</td>
-        <td>&emsp;&emsp;{{ guess.places_right }}</td>
+        <td>&emsp;&emsp;{{ guess.correct_digits }}</td>
+        <td>&emsp;&emsp;{{ guess.correct_position }}</td>
         </tr>
     {% endfor %}
     </tbody></table></div>
     <br></br>
+    
     <form method='post'>
       {% csrf_token %}
       <button type="submit" name="submit">Play Again</button>

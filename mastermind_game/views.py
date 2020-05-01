@@ -11,16 +11,14 @@ def genctx(request):
     return {}
 
 def home(request):
-    try:
-        if request.method =='POST':
-            form = forms.Difficulty(request.POST)
-            if form.is_valid():
-                answer_num = form.cleaned_data['difficulty']
-                game_id = api.start_game(answer_num)
-                return HttpResponseRedirect(reverse('game', args=(game_id, )))
-        return render(request, 'mastermind_game/index.html', {'form': forms.Difficulty})
-    except:
-        return HttpResponse(status=404)
+    if request.method =='POST':
+        form = forms.Difficulty(request.POST)
+        if form.is_valid():
+            difficulty_level = form.cleaned_data['difficulty']
+            username = form.cleaned_data['username']
+            game_id = api.start_game(difficulty_level, username)
+            return HttpResponseRedirect(reverse('game', args=(game_id, )))
+    return render(request, 'mastermind_game/index.html', {'form': forms.Difficulty})
 
 def game(request, game_id:int):
     context = genctx(request)
@@ -28,9 +26,6 @@ def game(request, game_id:int):
     answer = game_details.answer
     guess_count = game_details.current_guess
     difficulty = game_details.difficulty
-    
-    if game_details.result == True or guess_count >= 10:
-        return HttpResponseRedirect(reverse('results', args=(game_id, )))
 
     if difficulty == 3:
         form = forms.EasyGuess
@@ -47,28 +42,22 @@ def game(request, game_id:int):
         elif difficulty == 5:
             form_posted = forms.HardGuess(request.POST)
 
-        try:
-            if form_posted.is_valid():
-                guess = []
-                for num in range(1, difficulty+1):
-                    guess.append(form_posted.cleaned_data['digit_'+str(num)])
-                context.update(api.check_guess(str(game_id), guess, answer, guess_count))
-                template = loader.get_template('mastermind_game/game.html')
-                if context['game_result'] == True or context['guess_count'] >= 10:
-                    return HttpResponseRedirect(reverse('results', args=(game_id, )))
-                else:
-                    return HttpResponse(template.render(context, request))
-        except:
-            return HttpResponse(status=404)
+        if form_posted.is_valid():
+            guess = []
+            for num in range(1, difficulty+1):
+                guess.append(form_posted.cleaned_data['digit_'+str(num)])
+            context.update(api.check_guess(str(game_id), guess, answer, guess_count))
+            template = loader.get_template('mastermind_game/game.html')
+            if context['win'] == True or context['guess_count'] >= 10:
+                return HttpResponseRedirect(reverse('results', args=(game_id, )))
+            else:
+                return HttpResponse(template.render(context, request))
     return render(request, 'mastermind_game/game.html', {'form': form})
 
 def results(request, game_id:int):
     context = genctx(request)
-    try:
-        if request.method =='POST':
-            return HttpResponseRedirect(reverse('home'))
-        context.update(api.get_results(game_id))
-        template = loader.get_template('mastermind_game/results.html')
-        return HttpResponse(template.render(context, request))
-    except:
-        return HttpResponse(status=404)
+    context.update(api.get_results(game_id))
+    template = loader.get_template('mastermind_game/results.html')
+    if request.method =='POST':
+        return HttpResponseRedirect(reverse('home'))
+    return HttpResponse(template.render(context, request))
